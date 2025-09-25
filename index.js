@@ -1,6 +1,6 @@
-const express = require("express");
-const fetch = require("node-fetch");
-const cheerio = require("cheerio");
+import express from "express";
+import fetch from "node-fetch";
+import { load } from "cheerio";  // <- اصلاح شد
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.get("/", async (req, res) => {
     const response = await fetch("https://optionz.ir/watch");
     const body = await response.text();
 
-    const $ = cheerio.load(body);
+    const $ = load(body);  // بجای cheerio()
     const titles = [];
     $("a").each((i, el) => {
       titles.push($(el).text().trim());
