@@ -1,5 +1,6 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import fetch from "node-fetch"; // npm install node-fetch@3.3.2
 
 const app = express();
 
@@ -7,7 +8,7 @@ function cleanText(str) {
   if (!str && str !== 0) return "";
   return String(str)
     .replace(/\u00A0/g, " ") // non-breaking space
-    .replace(/\s+/g, " ")    // چند فاصله -> یکی
+    .replace(/\s+/g, " ")    // چند فاصله → یکی
     .replace(/^\s+|\s+$/g, "")
     .replace(/,/g, "");      // حذف ویرگول برای اعداد
 }
@@ -21,10 +22,10 @@ app.get("/", async (req, res) => {
     const page = await browser.newPage();
 
     await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-    await page.goto(targetUrl, { waitUntil: "networkidle2", timeout: 20000 });
+    await page.goto(targetUrl, { waitUntil: "networkidle2", timeout: 30000 });
 
-    // صبر کن جدول ظاهر شود
-    await page.waitForSelector("#tblOptionQuee tbody tr", { timeout: 5000 });
+    // صبر کن 10 ثانیه تا JS جدول را بسازد
+    await page.waitForTimeout(10000);
 
     // داده‌ها را از جدول بخوان
     const rows = await page.$$eval("#tblOptionQuee tbody tr", trs => {
